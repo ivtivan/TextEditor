@@ -20,9 +20,14 @@ public class TextEditor extends JFrame implements ActionListener {
     public TextEditor() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Text Editor");
-        setVisible(true);
         setSize(600, 600);
         setJMenuBar(constructMenuBar());
+
+        textArea = new JTextArea();
+        textArea.setSize(getPreferredSize());
+        textArea.setLineWrap(true);
+        add(textArea);
+        setVisible(true);
     }
 
     private JMenuBar constructMenuBar() {

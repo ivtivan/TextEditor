@@ -59,16 +59,19 @@ public class TextEditor extends JFrame implements ActionListener {
     private JMenu constructMenuFile() {
         JMenu menuFile = new JMenu("File");
         JMenuItem newFile = new JMenuItem("New");
+        JMenuItem newWindow = new JMenuItem("New Window");
         JMenuItem openFile = new JMenuItem("Open");
         JMenuItem saveFile = new JMenuItem("Save");
         JMenuItem printFile = new JMenuItem("Print");
 
         newFile.addActionListener(this);
+        newWindow.addActionListener(this);
         openFile.addActionListener(this);
         saveFile.addActionListener(this);
         printFile.addActionListener(this);
 
         menuFile.add(newFile);
+        menuFile.add(newWindow);
         menuFile.add(openFile);
         menuFile.add(saveFile);
         menuFile.add(printFile);

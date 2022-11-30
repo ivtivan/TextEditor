@@ -31,6 +31,7 @@ public class ActionExecutor {
     public void executeCommand(String command) {
         switch (command) {
             case "New": reset(); break;
+            case "New Window": openNewWindow(); break;
             case "Open": open(); break;
             case "Save": save(); break;
             case "Print": print(); break;
@@ -69,6 +70,10 @@ public class ActionExecutor {
                 }
             }
         }
+    }
+
+    private void openNewWindow() {
+        new TextEditor();
     }
     
     private void save() {

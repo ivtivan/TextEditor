@@ -26,7 +26,7 @@ public class TextEditor extends JFrame implements ActionListener {
 
 
     private void setBasicProperties() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Text Editor");
         setSize(600, 600);
         setLocationRelativeTo(null);;
@@ -63,18 +63,21 @@ public class TextEditor extends JFrame implements ActionListener {
         JMenuItem openFile = new JMenuItem("Open");
         JMenuItem saveFile = new JMenuItem("Save");
         JMenuItem printFile = new JMenuItem("Print");
+        JMenuItem exit = new JMenuItem("Exit");
 
         newFile.addActionListener(this);
         newWindow.addActionListener(this);
         openFile.addActionListener(this);
         saveFile.addActionListener(this);
         printFile.addActionListener(this);
+        exit.addActionListener(this);
 
         menuFile.add(newFile);
         menuFile.add(newWindow);
         menuFile.add(openFile);
         menuFile.add(saveFile);
         menuFile.add(printFile);
+        menuFile.add(exit);
         return menuFile;
     }
 

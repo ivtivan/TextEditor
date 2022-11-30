@@ -35,6 +35,7 @@ public class ActionExecutor {
             case "Open": open(); break;
             case "Save": save(); break;
             case "Print": print(); break;
+            case "Exit": exit(); break;
             case "Cut": cut(); break;
             case "Copy": copy(); break;
             case "Paste": paste(); break;
@@ -102,6 +103,7 @@ public class ActionExecutor {
             }
         }
     }
+
     private void print() {
         try {
             targetTextArea.print();
@@ -109,6 +111,10 @@ public class ActionExecutor {
         catch (Exception e) {
             showMessage(e.getMessage());
         }
+    }
+
+    private void exit() {
+        targetFrame.dispose();
     }
 
     private void reset() {

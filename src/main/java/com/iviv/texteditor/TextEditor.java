@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -18,29 +19,38 @@ import javax.swing.JTextArea;
 
 public class TextEditor extends JFrame implements ActionListener {
     JTextArea textArea;
+    ActionExecutor actionExecutor;
 
     public TextEditor() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Text Editor");
-        setSize(600, 600);
-        setLocationRelativeTo(null);;
+        actionExecutor = new ActionExecutor(this);
+        setBasicProperties();
 
         // scrollPane for textarea
-        add(constructScrollPane());
+        add(constructScrollableTextArea());
         setJMenuBar(constructMenuBar());
 
         setVisible(true);
     }
 
 
+    private void setBasicProperties() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Text Editor");
+        setSize(600, 600);
+        setLocationRelativeTo(null);;
+    }
+
     private JTextArea constructTextArea() {
         textArea = new JTextArea();
         textArea.setSize(getPreferredSize());
         textArea.setLineWrap(true);
+        
+        actionExecutor.setTargetTextArea(textArea);
+        
         return textArea;
     }
 
-    private JScrollPane constructScrollPane() {
+    private JScrollPane constructScrollableTextArea() {
         JScrollPane scrollPane= new JScrollPane(constructTextArea());
         scrollPane.setSize(getPreferredSize());
         return scrollPane;
@@ -90,82 +100,6 @@ public class TextEditor extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand();
-
-        if (command.equals("New")) {
-            textArea.setText("");;
-        }
-        else if (command.equals("Open")) {
-            JFileChooser fileChooser = new JFileChooser();
-            if (fileChooser.showOpenDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {
-                File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                BufferedReader br = null;
-                try {
-                    String readLine;
-                    StringBuilder text = new StringBuilder("");
-                    br = new BufferedReader(new FileReader(file));
-                    while((readLine = br.readLine()) != null) {
-                        text.append(readLine);
-                        text.append("\n");
-                    }
-                    textArea.setText(text.toString());
-                    br.close();
-                }
-                catch(Exception ex) {
-                    JOptionPane.showMessageDialog(textArea, ex.getMessage());
-                }
-                finally {
-                    try {
-                        br.close();
-                    }
-                    catch (Exception ex) {
-                        JOptionPane.showMessageDialog(this, ex.getMessage());
-                    }
-                }
-            }
-        }
-        else if (command.equals("Save")) {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(new File("."));
-            if (fileChooser.showSaveDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {
-                File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                BufferedWriter bw = null;
-                try {
-                    bw = new BufferedWriter(new FileWriter(file, false));
-                    bw.write(textArea.getText());
-                }
-                catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
-                }
-                finally {
-                    if (bw != null) {
-                        try {
-                            bw.flush();
-                            bw.close();
-                        }
-                        catch (Exception ex) {
-                            JOptionPane.showMessageDialog(this, ex.getMessage());
-                        }
-                    }
-                }
-            }
-        }
-        else if (command.equals("Print")) {
-            try {
-                textArea.print();
-            }
-            catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage());
-            }
-        }
-        else if (command.equals("Cut")) {
-            textArea.cut();
-        }
-        else if (command.equals("Copy")) {
-            textArea.copy();
-        }
-        else if (command.equals("Paste")) {
-            textArea.paste();
-        }
+        actionExecutor.executeCommand(e.getActionCommand());
     }
 }

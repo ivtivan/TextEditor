@@ -1,6 +1,7 @@
 package com.iviv.texteditor;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -8,6 +9,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 
 public class TextEditor extends JFrame implements ActionListener {
     JTextArea textArea;
@@ -64,6 +66,13 @@ public class TextEditor extends JFrame implements ActionListener {
         JMenuItem saveFile = new JMenuItem("Save");
         JMenuItem printFile = new JMenuItem("Print");
         JMenuItem exit = new JMenuItem("Exit");
+
+        newFile.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+        newWindow.setAccelerator(KeyStroke.getKeyStroke("shift ctrl pressed N"));
+        openFile.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+        saveFile.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+        printFile.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+        exit.setAccelerator(KeyStroke.getKeyStroke('W', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
 
         newFile.addActionListener(this);
         newWindow.addActionListener(this);

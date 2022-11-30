@@ -13,6 +13,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class TextEditor extends JFrame implements ActionListener {
@@ -24,19 +25,25 @@ public class TextEditor extends JFrame implements ActionListener {
         setSize(600, 600);
         setLocationRelativeTo(null);;
 
-        // text area and menu bar
-        textArea = constructTextArea();
-        add(textArea);
+        // scrollPane for textarea
+        add(constructScrollPane());
         setJMenuBar(constructMenuBar());
 
         setVisible(true);
     }
+
 
     private JTextArea constructTextArea() {
         textArea = new JTextArea();
         textArea.setSize(getPreferredSize());
         textArea.setLineWrap(true);
         return textArea;
+    }
+
+    private JScrollPane constructScrollPane() {
+        JScrollPane scrollPane= new JScrollPane(constructTextArea());
+        scrollPane.setSize(getPreferredSize());
+        return scrollPane;
     }
 
     private JMenuBar constructMenuBar() {

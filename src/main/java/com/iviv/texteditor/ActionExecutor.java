@@ -6,29 +6,19 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-import javax.swing.Action;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-
 /*
  *  Executes actions based on ActionEvents from the TextEditor 
  *  Creates Panels when errors occur;
  */
 public class ActionExecutor {
-    private JTextArea targetTextArea;
-    private JFrame targetFrame;
+    private TextEditor targetEditor;
 
-    public ActionExecutor(JFrame targetFrame) {
-        this.targetFrame = targetFrame;
+    public ActionExecutor(TextEditor targetFrame) {
+        this.targetEditor = targetFrame;
     }
 
-    public void setTargetTextArea(JTextArea targetTextArea) {
-        this.targetTextArea = targetTextArea;
-    }
-
-    public void executeCommand(String command) {
+    public void executeCommand(String command, String... params) {
         switch (command) {
             case "New": reset(); break;
             case "New Window": openNewWindow(); break;
@@ -39,7 +29,11 @@ public class ActionExecutor {
             case "Cut": cut(); break;
             case "Copy": copy(); break;
             case "Paste": paste(); break;
-            default: showMessage("Command not found."); break;
+            case "Date": appendDate(); break;
+            case "Find": spawnFind(); break;
+            case "Replace": spawnReplace(); break;
+            case "Replace All Old New": replace(params[0], params[1]); break;
+            default: passMessage("Command not found."); break;
         }
     }
 
@@ -56,18 +50,18 @@ public class ActionExecutor {
                     text.append(readLine);
                     text.append("\n");
                 }
-                targetTextArea.setText(text.toString());
+                targetEditor.getTextArea().setText(text.toString());
                 br.close();
             }
             catch(Exception e) {
-                showMessage(e.getMessage());
+                passMessage(e.getMessage());
             }
             finally {
                 try {
                     br.close();
                 }
                 catch (Exception e) {
-                    showMessage(e.getMessage());
+                    passMessage(e.getMessage());
                 }
             }
         }
@@ -85,10 +79,10 @@ public class ActionExecutor {
             BufferedWriter bw = null;
             try {
                 bw = new BufferedWriter(new FileWriter(file, false));
-                bw.write(targetTextArea.getText());
+                bw.write(targetEditor.getTextArea().getText());
             }
             catch (Exception e) {
-                showMessage(e.getMessage());
+                passMessage(e.getMessage());
             }
             finally {
                 if (bw != null) {
@@ -97,7 +91,7 @@ public class ActionExecutor {
                         bw.close();
                     }
                     catch (Exception e) {
-                        showMessage(e.getMessage());;
+                        passMessage(e.getMessage());;
                     }
                 }
             }
@@ -106,34 +100,50 @@ public class ActionExecutor {
 
     private void print() {
         try {
-            targetTextArea.print();
+            targetEditor.getTextArea().print();
         }
         catch (Exception e) {
-            showMessage(e.getMessage());
+            passMessage(e.getMessage());
         }
     }
 
     private void exit() {
-        targetFrame.dispose();
+        targetEditor.dispose();
     }
 
     private void reset() {
-        targetTextArea.setText("");
+        targetEditor.getTextArea().setText("");
     }
 
     private void cut() {
-        targetTextArea.cut();
+        targetEditor.getTextArea().cut();
     }
 
     private void copy() {
-        targetTextArea.copy();
+        targetEditor.getTextArea().copy();
     }
 
     private void paste() {
-        targetTextArea.paste();
+        targetEditor.getTextArea().paste();
     }
 
-    private void showMessage(String message) {
-        JOptionPane.showMessageDialog(targetFrame, message);
+    private void appendDate() {
+        targetEditor.getTextArea().append(java.time.LocalDate.now().toString());
+    }
+
+    private void spawnFind() {
+
+    }
+
+    private void spawnReplace() {
+        new ReplaceWidnow(this);
+    }
+
+    public void replace(String oldWord, String newWord) {
+        targetEditor.getTextArea().setText(targetEditor.getTextArea().getText().replace(oldWord, newWord));
+    }
+
+    private void passMessage(String message) {
+        targetEditor.showMessage(message);
     }
 }

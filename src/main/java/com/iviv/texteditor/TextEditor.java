@@ -7,13 +7,14 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
 public class TextEditor extends JFrame implements ActionListener {
-    JTextArea textArea;
-    ActionExecutor actionExecutor;
+    private JTextArea textArea;
+    private ActionExecutor actionExecutor;
 
     public TextEditor() {
         actionExecutor = new ActionExecutor(this);
@@ -26,21 +27,21 @@ public class TextEditor extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    public JTextArea getTextArea() {
+        return textArea;
+    }
 
     private void setBasicProperties() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Text Editor");
         setSize(600, 600);
-        setLocationRelativeTo(null);;
+        setLocationRelativeTo(null);
     }
 
     private JTextArea constructTextArea() {
         textArea = new JTextArea();
         textArea.setSize(getPreferredSize());
-        textArea.setLineWrap(true);
-        
-        actionExecutor.setTargetTextArea(textArea);
-        
+        textArea.setLineWrap(true);        
         return textArea;
     }
 
@@ -85,8 +86,11 @@ public class TextEditor extends JFrame implements ActionListener {
         menuFile.add(newWindow);
         menuFile.add(openFile);
         menuFile.add(saveFile);
+        menuFile.addSeparator();
         menuFile.add(printFile);
+        menuFile.addSeparator();
         menuFile.add(exit);
+
         return menuFile;
     }
 
@@ -95,18 +99,40 @@ public class TextEditor extends JFrame implements ActionListener {
         JMenuItem cut = new JMenuItem("Cut");
         JMenuItem copy = new JMenuItem("Copy");
         JMenuItem paste = new JMenuItem("Paste");
+        JMenuItem find = new JMenuItem("Find");
+        JMenuItem replace = new JMenuItem("Replace");
+        JMenuItem date = new JMenuItem("Date");
+
+        cut.setAccelerator(KeyStroke.getKeyStroke('X', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+        copy.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+        paste.setAccelerator(KeyStroke.getKeyStroke('V', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+        find.setAccelerator(KeyStroke.getKeyStroke('F', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+        replace.setAccelerator(KeyStroke.getKeyStroke('H', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
 
         cut.addActionListener(this);
         copy.addActionListener(this);
         paste.addActionListener(this);
+        find.addActionListener(this);
+        replace.addActionListener(this);
+        date.addActionListener(this);
 
         menuEdit.add(cut);
         menuEdit.add(copy);
         menuEdit.add(paste);
+        menuEdit.addSeparator();
+        menuEdit.add(find);
+        menuEdit.add(replace);
+        menuEdit.addSeparator();
+        menuEdit.add(date);
+
         return menuEdit;
     }
 
     public void actionPerformed(ActionEvent e) {
         actionExecutor.executeCommand(e.getActionCommand());
+    }
+
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(this, message);
     }
 }

@@ -24,12 +24,13 @@ public class ReplaceWidnow extends JFrame implements ActionListener {
         
         setVisible(true);
     }
-    
+
     private void setBasicProperties() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Replace");
         setSize(300, 200);
         setLocationRelativeTo(null);
+        setResizable(false);
     }
     
     private JPanel generateMainPanel() {
@@ -38,7 +39,7 @@ public class ReplaceWidnow extends JFrame implements ActionListener {
         JLabel newWordLabel = new JLabel("With:");
 
         oldWord = new JTextField();
-        oldWord.setPreferredSize(new Dimension(30, 10));
+        oldWord.setPreferredSize(new Dimension(30, 5));
         newWord = new JTextField(30);
         newWord.setPreferredSize(new Dimension(30, 10));
         
@@ -66,5 +67,4 @@ public class ReplaceWidnow extends JFrame implements ActionListener {
         }
         dispose();
     }
-
 }

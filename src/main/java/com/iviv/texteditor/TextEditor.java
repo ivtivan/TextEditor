@@ -1,5 +1,7 @@
 package com.iviv.texteditor;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 
@@ -15,9 +17,11 @@ import javax.swing.KeyStroke;
 public class TextEditor extends JFrame implements ActionListener {
     private JTextArea textArea;
     private ActionExecutor actionExecutor;
+    private List<JFrame> childFrames;
 
     public TextEditor() {
         actionExecutor = new ActionExecutor(this);
+        childFrames = new ArrayList<>();
         setBasicProperties();
 
         // scrollPane for textarea
@@ -29,6 +33,10 @@ public class TextEditor extends JFrame implements ActionListener {
 
     public JTextArea getTextArea() {
         return textArea;
+    }
+
+    public void addChildFrame(JFrame child) {
+        childFrames.add(child);
     }
 
     private void setBasicProperties() {
@@ -134,5 +142,13 @@ public class TextEditor extends JFrame implements ActionListener {
 
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
+    }
+    
+    @Override
+    public void dispose() {
+        for (JFrame frame : childFrames) {
+            frame.dispose();
+        }
+        super.dispose();
     }
 }

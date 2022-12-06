@@ -136,7 +136,7 @@ public class ActionExecutor {
     }
 
     private void spawnReplace() {
-        new ReplaceWidnow(this);
+        targetEditor.addChildFrame(new ReplaceWidnow(this));
     }
 
     public void replace(String oldWord, String newWord) {

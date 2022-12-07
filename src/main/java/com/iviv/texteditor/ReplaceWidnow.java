@@ -2,7 +2,6 @@ package com.iviv.texteditor;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
-import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -39,9 +38,7 @@ public class ReplaceWidnow extends JFrame implements ActionListener {
         JLabel newWordLabel = new JLabel("With:");
 
         oldWord = new JTextField();
-        oldWord.setPreferredSize(new Dimension(30, 5));
-        newWord = new JTextField(30);
-        newWord.setPreferredSize(new Dimension(30, 10));
+        newWord = new JTextField();
         
         JButton btnReplace = new JButton("Replace");
         JButton btnCancel = new JButton("Cancel");;

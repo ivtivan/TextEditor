@@ -1,5 +1,6 @@
 package com.iviv.texteditor;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,12 +8,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 import javax.swing.JFileChooser;
+import javax.swing.text.Highlighter.HighlightPainter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 /*
  *  Executes actions based on ActionEvents from the TextEditor 
  *  Creates Panels when errors occur;
  */
 public class ActionExecutor {
     private TextEditor targetEditor;
+    private int searchIndex;
 
     public ActionExecutor(TextEditor targetFrame) {
         this.targetEditor = targetFrame;
@@ -31,6 +36,8 @@ public class ActionExecutor {
             case "Paste": paste(); break;
             case "Date": appendDate(); break;
             case "Find": spawnFind(); break;
+            case "Find Next": findNext(params[0]); break;
+            case "Find All": findAll(params[0]); break;
             case "Replace": spawnReplace(); break;
             case "Replace All Old New": replace(params[0], params[1]); break;
             default: passMessage("Command not found."); break;
@@ -132,7 +139,43 @@ public class ActionExecutor {
     }
 
     private void spawnFind() {
+        targetEditor.addChildFrame(new FindWidnow(this));
+    }
 
+    private void highlightSearchResult(String searchTerm) {
+        HighlightPainter painter = new DefaultHighlightPainter(Color.LIGHT_GRAY);
+        try
+        {
+            targetEditor.getTextArea().getHighlighter().addHighlight(searchIndex, searchIndex + searchTerm.length(), painter);
+        }
+        catch(BadLocationException e) {
+            passMessage(e.getMessage());
+        }
+    }
+
+    private void findNextIndex(String searchTerm) {
+        searchIndex = targetEditor.getTextArea().getText().indexOf(searchTerm, searchIndex + 1);
+    }
+
+    private void resetSearchIndex() {
+        searchIndex = 0;
+    }
+
+    public void findAll(String searchTerm) {
+        findNextIndex(searchTerm);
+        while (searchIndex != -1) {
+            highlightSearchResult(searchTerm);
+            findNextIndex(searchTerm);
+        }
+    }
+    public void findNext(String searchTerm) {
+        findNextIndex(searchTerm);
+        if (searchIndex == -1) {
+            resetSearchIndex();
+            passMessage("No search results.");
+        }
+
+        highlightSearchResult(searchTerm);
     }
 
     private void spawnReplace() {

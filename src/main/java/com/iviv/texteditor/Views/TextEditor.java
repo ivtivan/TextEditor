@@ -1,4 +1,4 @@
-package com.iviv.texteditor;
+package com.iviv.texteditor.Views;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
+
+import com.iviv.texteditor.Controllers.ActionExecutor;
 
 public class TextEditor extends JFrame implements ActionListener {
     private JTextArea textArea;

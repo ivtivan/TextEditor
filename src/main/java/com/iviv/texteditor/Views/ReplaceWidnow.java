@@ -1,4 +1,4 @@
-package com.iviv.texteditor;
+package com.iviv.texteditor.Views;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.iviv.texteditor.Controllers.ActionExecutor;
 
 public class ReplaceWidnow extends JFrame implements ActionListener {
     private ActionExecutor actionExecutor;

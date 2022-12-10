@@ -14,15 +14,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
-import com.iviv.texteditor.Controllers.ActionExecutor;
+import com.iviv.texteditor.Controllers.ActionDistributor;
 
 public class TextEditor extends JFrame implements ActionListener {
     private JTextArea textArea;
-    private ActionExecutor actionExecutor;
+    private ActionDistributor actionExecutor;
     private List<JFrame> childFrames;
 
     public TextEditor() {
-        actionExecutor = new ActionExecutor(this);
+        actionExecutor = new ActionDistributor(this);
         childFrames = new ArrayList<>();
         setBasicProperties();
 

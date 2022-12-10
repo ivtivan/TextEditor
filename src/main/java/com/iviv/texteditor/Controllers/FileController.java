@@ -7,20 +7,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 import javax.swing.JFileChooser;
-import javax.swing.text.Highlighter.HighlightPainter;
 
-import com.iviv.texteditor.Views.FindWidnow;
-import com.iviv.texteditor.Views.ReplaceWidnow;
 import com.iviv.texteditor.Views.TextEditor;
-/*
- *  Executes actions based on ActionEvents from the TextEditor 
- *  Creates Panels when errors occur;
- */
-public class ActionExecutor {
-    private TextEditor targetEditor;
 
-    public ActionExecutor(TextEditor targetFrame) {
-        this.targetEditor = targetFrame;
+/*
+ * Executes commands passed through the file menu
+ */
+public class FileController extends ActionController {
+    public FileController(TextEditor targetEditor) {
+        super(targetEditor);
     }
 
     public void executeCommand(String command, String... params) {
@@ -35,8 +30,6 @@ public class ActionExecutor {
             case "Copy": copy(); break;
             case "Paste": paste(); break;
             case "Date": appendDate(); break;
-            case "Find": spawnFind(); break;
-            case "Replace": spawnReplace(); break;
             default: passMessage("Command not found."); break;
         }
     }
@@ -54,7 +47,7 @@ public class ActionExecutor {
                     text.append(readLine);
                     text.append("\n");
                 }
-                targetEditor.getTextArea().setText(text.toString());
+                getTargetEditor().getTextArea().setText(text.toString());
                 br.close();
             }
             catch(Exception e) {
@@ -83,7 +76,7 @@ public class ActionExecutor {
             BufferedWriter bw = null;
             try {
                 bw = new BufferedWriter(new FileWriter(file, false));
-                bw.write(targetEditor.getTextArea().getText());
+                bw.write(getTargetEditor().getTextArea().getText());
             }
             catch (Exception e) {
                 passMessage(e.getMessage());
@@ -104,7 +97,7 @@ public class ActionExecutor {
 
     private void print() {
         try {
-            targetEditor.getTextArea().print();
+            getTargetEditor().getTextArea().print();
         }
         catch (Exception e) {
             passMessage(e.getMessage());
@@ -112,38 +105,27 @@ public class ActionExecutor {
     }
 
     private void exit() {
-        targetEditor.dispose();
+        getTargetEditor().dispose();
     }
 
     private void reset() {
-        targetEditor.getTextArea().setText("");
+        getTargetEditor().getTextArea().setText("");
     }
 
     private void cut() {
-        targetEditor.getTextArea().cut();
+        getTargetEditor().getTextArea().cut();
     }
 
     private void copy() {
-        targetEditor.getTextArea().copy();
+        getTargetEditor().getTextArea().copy();
     }
 
     private void paste() {
-        targetEditor.getTextArea().paste();
+        getTargetEditor().getTextArea().paste();
     }
 
     private void appendDate() {
-        targetEditor.getTextArea().append(java.time.LocalDate.now().toString());
+        getTargetEditor().getTextArea().append(java.time.LocalDate.now().toString());
     }
 
-    private void spawnFind() {
-        targetEditor.addChildFrame(new FindWidnow(targetEditor));
-    }
-
-    private void spawnReplace() {
-        targetEditor.addChildFrame(new ReplaceWidnow(targetEditor));
-    }
-
-    private void passMessage(String message) {
-        targetEditor.showMessage(message);
-    }
 }

@@ -7,12 +7,11 @@ import javax.swing.text.Highlighter.HighlightPainter;
 
 import com.iviv.texteditor.Views.TextEditor;
 
-public class FindController {
+public class FindController extends ActionController {
     private int searchIndex;
-    private TextEditor targetEditor;
 
     public FindController(TextEditor targetEditor) {
-        this.targetEditor = targetEditor;
+        super(targetEditor);
         searchIndex = -1;
     }
 
@@ -29,7 +28,7 @@ public class FindController {
         HighlightPainter painter = new DefaultHighlightPainter(Color.LIGHT_GRAY);
         try
         {
-            targetEditor.getTextArea().getHighlighter().addHighlight(searchIndex, searchIndex + searchTerm.length(), painter);
+            getTargetEditor().getTextArea().getHighlighter().addHighlight(searchIndex, searchIndex + searchTerm.length(), painter);
         }
         catch(BadLocationException e) {
             passMessage(e.getMessage());
@@ -37,7 +36,7 @@ public class FindController {
     }
 
     private void findNextIndex(String searchTerm) {
-        searchIndex = targetEditor.getTextArea().getText().indexOf(searchTerm, searchIndex + 1);
+        searchIndex = getTargetEditor().getTextArea().getText().indexOf(searchTerm, searchIndex + 1);
     }
 
     private void resetSearchIndex() {
@@ -70,9 +69,5 @@ public class FindController {
         }
 
         highlightSearchResult(searchTerm);
-    }
-
-    private void passMessage(String message) {
-        targetEditor.showMessage(message);
     }
 }

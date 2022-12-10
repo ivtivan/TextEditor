@@ -2,11 +2,9 @@ package com.iviv.texteditor.Controllers;
 
 import com.iviv.texteditor.Views.TextEditor;
 
-public class ReplaceController {
-    private TextEditor targetEditor;
-
+public class ReplaceController extends ActionController {
     public ReplaceController(TextEditor targetEditor) {
-        this.targetEditor = targetEditor;
+        super(targetEditor);
     }
 
     public void executeCommand(String command, String... params) {
@@ -17,10 +15,6 @@ public class ReplaceController {
     }
 
     public void replace(String oldWord, String newWord) {
-        targetEditor.getTextArea().setText(targetEditor.getTextArea().getText().replace(oldWord, newWord));
-    }
-
-    private void passMessage(String message) {
-        targetEditor.showMessage(message);
+        getTargetEditor().getTextArea().setText(getTargetEditor().getTextArea().getText().replace(oldWord, newWord));
     }
 }

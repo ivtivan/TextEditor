@@ -1,6 +1,5 @@
 package com.iviv.texteditor.Controllers;
 
-import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,20 +12,15 @@ import javax.swing.text.Highlighter.HighlightPainter;
 import com.iviv.texteditor.Views.FindWidnow;
 import com.iviv.texteditor.Views.ReplaceWidnow;
 import com.iviv.texteditor.Views.TextEditor;
-
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 /*
  *  Executes actions based on ActionEvents from the TextEditor 
  *  Creates Panels when errors occur;
  */
 public class ActionExecutor {
     private TextEditor targetEditor;
-    private int searchIndex;
 
     public ActionExecutor(TextEditor targetFrame) {
         this.targetEditor = targetFrame;
-        searchIndex = -1;
     }
 
     public void executeCommand(String command, String... params) {
@@ -42,11 +36,7 @@ public class ActionExecutor {
             case "Paste": paste(); break;
             case "Date": appendDate(); break;
             case "Find": spawnFind(); break;
-            case "Find Prev": findPrev(params[0]); break;
-            case "Find Next": findNext(params[0]); break;
-            case "Find All": findAll(params[0]); break;
             case "Replace": spawnReplace(); break;
-            case "Replace All Old New": replace(params[0], params[1]); break;
             default: passMessage("Command not found."); break;
         }
     }
@@ -146,15 +136,11 @@ public class ActionExecutor {
     }
 
     private void spawnFind() {
-        targetEditor.addChildFrame(new FindWidnow(this));
+        targetEditor.addChildFrame(new FindWidnow(targetEditor));
     }
 
     private void spawnReplace() {
-        targetEditor.addChildFrame(new ReplaceWidnow(this));
-    }
-
-    public void replace(String oldWord, String newWord) {
-        targetEditor.getTextArea().setText(targetEditor.getTextArea().getText().replace(oldWord, newWord));
+        targetEditor.addChildFrame(new ReplaceWidnow(targetEditor));
     }
 
     private void passMessage(String message) {

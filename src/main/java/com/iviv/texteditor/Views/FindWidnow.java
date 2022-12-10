@@ -9,14 +9,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.iviv.texteditor.Controllers.ActionExecutor;
+import com.iviv.texteditor.Controllers.FindController;
 
 public class FindWidnow extends JFrame implements ActionListener {
-    private ActionExecutor actionExecutor;
     private JTextField searchTerm;
+    private FindController findController;
 
-    public FindWidnow(ActionExecutor actionExecutor) {
-        this.actionExecutor = actionExecutor;
+    public FindWidnow(TextEditor targetEditor) {
+        findController = new FindController(targetEditor);
         setBasicProperties();
         
         add(generateMainPanel());
@@ -65,7 +65,7 @@ public class FindWidnow extends JFrame implements ActionListener {
             dispose();
             return;
         }
-        actionExecutor.executeCommand(e.getActionCommand(), searchTerm.getText());
+        findController.executeCommand(e.getActionCommand(), searchTerm.getText());
         if (e.getActionCommand().equals("Find All")) {
             dispose();
         }

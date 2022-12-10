@@ -10,15 +10,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.iviv.texteditor.Controllers.ActionExecutor;
+import com.iviv.texteditor.Controllers.ReplaceController;
 
 public class ReplaceWidnow extends JFrame implements ActionListener {
-    private ActionExecutor actionExecutor;
+    private ReplaceController replaceController;
     private JTextField oldWord;
     private JTextField newWord;
 
-    public ReplaceWidnow(ActionExecutor actionExecutor) {
-        this.actionExecutor = actionExecutor;
+    public ReplaceWidnow(TextEditor targetEditor) {
+        replaceController = new ReplaceController(targetEditor);
         setBasicProperties();
         
         add(generateMainPanel());
@@ -62,7 +62,7 @@ public class ReplaceWidnow extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Replace")) {
-            actionExecutor.executeCommand("Replace All Old New", oldWord.getText(), newWord.getText());
+            replaceController.executeCommand("Replace All Old New", oldWord.getText(), newWord.getText());
         }
         dispose();
     }

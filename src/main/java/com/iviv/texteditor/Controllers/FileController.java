@@ -18,6 +18,7 @@ public class FileController extends ActionController {
         super(targetEditor);
     }
 
+    @Override
     public void executeCommand(String command, String... params) {
         switch (command) {
             case "New": reset(); break;

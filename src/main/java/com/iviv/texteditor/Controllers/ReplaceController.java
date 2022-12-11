@@ -7,6 +7,7 @@ public class ReplaceController extends ActionController {
         super(targetEditor);
     }
 
+    @Override
     public void executeCommand(String command, String... params) {
         switch (command) {
             case "Replace All Old New": replace(params[0], params[1]); break;

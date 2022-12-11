@@ -1,73 +1,142 @@
 package com.iviv.texteditor.Controllers;
 
 import java.awt.Color;
+import java.util.Stack;
+
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
+import javax.swing.text.Highlighter.Highlight;
 import javax.swing.text.Highlighter.HighlightPainter;
 
 import com.iviv.texteditor.Views.TextEditor;
 
 public class FindController extends ActionController {
-    private int searchIndex;
+    private Stack<Integer> foundAt; // filled by search next; used for search prev
+    HighlightPainter painter;
+    String searchTerm;
 
     public FindController(TextEditor targetEditor) {
         super(targetEditor);
-        searchIndex = -1;
+        foundAt = new Stack<>();
+        painter = new DefaultHighlightPainter(Color.LIGHT_GRAY);
     }
 
+    private void setSearchTerm(String searchTerm) {
+        if (this.searchTerm == null || !this.searchTerm.equals(searchTerm)) {
+            reset();
+            this.searchTerm = searchTerm;
+        }
+    }
+
+    private boolean isValid(String... params) {
+        return !((params == null || params.length != 1 || params[0].equals("")));
+    }
+
+    @Override
     public void executeCommand(String command, String... params) {
+        if (!isValid(params)) {
+            return;
+        }
+
+        setSearchTerm(params[0]);
         switch (command) {
-            case "Find Prev": findPrev(params[0]); break;
-            case "Find Next": findNext(params[0]); break;
-            case "Find All": findAll(params[0]); break;
+            case "Find Prev": findPrev(); break;
+            case "Find Next": findNext(); break;
+            case "Find All": findAll(); break;
             default: passMessage("Command not found."); break;
         }
     }
 
-    private void highlightSearchResult(String searchTerm) {
-        HighlightPainter painter = new DefaultHighlightPainter(Color.LIGHT_GRAY);
+    public void reset() {
+        removeAllHighlights();
+        resetSearchResults();
+    }
+
+    private void removeAllHighlights() {
+        getTargetEditor().getTextArea().getHighlighter().removeAllHighlights();
+    }
+
+    private void removeLastHighlight() {
+        Highlight highlights[] = getTargetEditor().getTextArea().getHighlighter().getHighlights();
+        
+        if (highlights.length == 0) {
+            return;
+        }
+        
+        getTargetEditor().getTextArea().getHighlighter().removeHighlight(highlights[highlights.length - 1]);
+    }
+
+    private void highlightSearchResult() {
+        if (foundAt.isEmpty()) {
+            passMessage("Tried to highlight a word that wasn't found.");
+            return;
+        }
+
         try
         {
-            getTargetEditor().getTextArea().getHighlighter().addHighlight(searchIndex, searchIndex + searchTerm.length(), painter);
+            getTargetEditor().getTextArea().getHighlighter().addHighlight(foundAt.peek(), foundAt.peek() + searchTerm.length(), painter);
         }
         catch(BadLocationException e) {
             passMessage(e.getMessage());
         }
     }
 
-    private void findNextIndex(String searchTerm) {
-        searchIndex = getTargetEditor().getTextArea().getText().indexOf(searchTerm, searchIndex + 1);
-    }
+    private int findNextIndex() {
+        int searchFrom = 0;
 
-    private void resetSearchIndex() {
-        searchIndex = -1;
-    }
-
-    public void findAll(String searchTerm) {
-        findNextIndex(searchTerm);
-        while (searchIndex != -1) {
-            highlightSearchResult(searchTerm);
-            findNextIndex(searchTerm);
+        if (!foundAt.isEmpty()) {
+            searchFrom = foundAt.peek() + 1;
         }
+
+        foundAt.add(getTargetEditor().getTextArea().getText().indexOf(searchTerm, searchFrom));
+        return foundAt.peek();
     }
 
-    public void findPrev(String searchTerm) {
-        findNextIndex(searchTerm);
-        if (searchIndex == -1) {
-            resetSearchIndex();
+    private int findPrevIndex() {
+        foundAt.pop();
+        if (foundAt.isEmpty()) {
+            return -1;
+        }
+        return foundAt.peek();
+    }
+
+    private void resetSearchResults() {
+        foundAt.clear();
+    }
+
+    public void findAll() {
+        findNextIndex();
+
+        while (foundAt.peek() != -1) {
+            highlightSearchResult();
+            findNextIndex();
+        }
+
+        resetSearchResults();
+    }
+
+    public void findPrev() {
+        if (foundAt.size() == 1 || foundAt.isEmpty()) {
             passMessage("No search results.");
+            return;
         }
 
-        highlightSearchResult(searchTerm);
+        findPrevIndex();
+
+        removeLastHighlight();
+        highlightSearchResult();
     }
 
-    public void findNext(String searchTerm) {
-        findNextIndex(searchTerm);
-        if (searchIndex == -1) {
-            resetSearchIndex();
+    public void findNext() {
+        findNextIndex();
+
+        if (foundAt.peek() == -1) {
             passMessage("No search results.");
+            foundAt.pop();
+            return;
         }
 
-        highlightSearchResult(searchTerm);
+        removeLastHighlight();
+        highlightSearchResult();
     }
 }

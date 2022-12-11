@@ -66,8 +66,11 @@ public class FindWidnow extends JFrame implements ActionListener {
             return;
         }
         findController.executeCommand(e.getActionCommand(), searchTerm.getText());
-        if (e.getActionCommand().equals("Find All")) {
-            dispose();
-        }
+    }
+
+    @Override
+    public void dispose() {
+        findController.reset();
+        super.dispose();
     }
 }

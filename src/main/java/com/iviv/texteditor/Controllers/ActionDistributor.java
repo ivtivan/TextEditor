@@ -13,6 +13,7 @@ public class ActionDistributor extends ActionController {
        super(targetEditor);
     }
 
+    @Override
     public void executeCommand(String command, String... params) {
         switch (command) {
             case "Find": spawnFind(); break;
